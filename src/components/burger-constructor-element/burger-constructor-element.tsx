@@ -1,13 +1,13 @@
 import { FC, memo } from 'react';
 import { BurgerConstructorElementUI } from '@ui';
 import { BurgerConstructorElementProps } from './type';
-import { useSelector, useDispatch } from '../../services/store';
+import { useDispatch } from 'react-redux';
+import { useSelector } from '../../services/store';
 import {
   constructorSelector,
   deleteItem,
-  updateAll
-} from '../../services/slices/constructorIngredientSlice';
-import { TConstructorIngredient } from '@utils-types';
+  swapIngredient
+} from '../../services/slices/constructorSlice';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
   ({ ingredient, index, totalItems }) => {
@@ -15,24 +15,12 @@ export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
 
     const constructorItems = useSelector(constructorSelector.selectItems);
 
-    function swapElements(
-      state: TConstructorIngredient[],
-      index: number,
-      step: number
-    ) {
-      const copy = [...state];
-      copy[index] = copy.splice(index + step, 1, copy[index])[0];
-      return copy;
-    }
-
     const handleMoveDown = () => {
-      dispatch(updateAll(swapElements(constructorItems.ingredients, index, 1)));
+      dispatch(swapIngredient({ index: index, step: 1 }));
     };
 
     const handleMoveUp = () => {
-      dispatch(
-        updateAll(swapElements(constructorItems.ingredients, index, -1))
-      );
+      dispatch(swapIngredient({ index: index, step: -1 }));
     };
 
     const handleClose = () => {

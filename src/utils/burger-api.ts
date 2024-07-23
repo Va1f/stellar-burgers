@@ -240,7 +240,9 @@ export const logoutApi = () =>
     body: JSON.stringify({
       token: localStorage.getItem('refreshToken')
     })
-  }).then((res) => {
-    setCookie('accessToken', '');
-    return res;
-  });
+  })
+    .then((res) => checkResponse<TServerResponse<{}>>(res))
+    .then(() => {
+      localStorage.removeItem('refreshToken');
+      setCookie('accessToken', '');
+    });
