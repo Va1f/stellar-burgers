@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCookie } from '../../utils/cookie';
+
 import { TUser } from '@utils-types';
 import {
   registerUserApi,
@@ -7,7 +7,7 @@ import {
   getUserApi,
   updateUserApi,
   logoutApi
-} from '@api';
+} from '../../utils/burger-api';
 
 export const register = createAsyncThunk('user/register', registerUserApi);
 export const login = createAsyncThunk('user/login', loginUserApi);
@@ -15,27 +15,13 @@ export const apiGetUser = createAsyncThunk('user/getuser', getUserApi);
 export const updateUser = createAsyncThunk('user/update', updateUserApi);
 export const logout = createAsyncThunk('user/logout', logoutApi);
 
-export const initializeAuth = createAsyncThunk(
-  'user/initializeAuth',
-  async (_, { dispatch }) => {
-    const accessToken = getCookie('accessToken');
-    if (accessToken) {
-      try {
-        await dispatch(apiGetUser()).unwrap();
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-      }
-    }
-  }
-);
-
 export interface TUserState {
   isAuthChecked: boolean;
   user: TUser;
   error: string | undefined;
 }
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   isAuthChecked: false,
   user: {
     email: '',
@@ -111,4 +97,3 @@ export const userSlice = createSlice({
 
 export const { isAuthCheckedSelector, getUser, getName, getError } =
   userSlice.selectors;
-export default userSlice.reducer;

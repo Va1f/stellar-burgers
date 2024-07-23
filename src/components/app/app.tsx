@@ -11,13 +11,21 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
+
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+
+import {
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
-import { useDispatch, useSelector } from '../../services/store';
+import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
-import { getIngredientsList } from '../../services/slices/IngredientsSlice';
-import { initializeAuth } from '../../services/slices/userSlice';
+import { getIngredientsList } from '../../services/slices/IngredientSlice';
+import { apiGetUser } from '../../services/slices/userSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,8 +35,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredientsList());
-    dispatch(initializeAuth());
-  }, [dispatch]);
+    dispatch(apiGetUser());
+  }, []);
 
   return (
     <div className={styles.app}>
@@ -129,5 +137,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;
